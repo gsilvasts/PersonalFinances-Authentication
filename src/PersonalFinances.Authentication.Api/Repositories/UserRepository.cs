@@ -2,6 +2,8 @@
 using Microsoft.Data.SqlClient;
 using PersonalFinances.Authentication.Api.Interfaces.Repository;
 using PersonalFinances.Authentication.Api.Models;
+using System.Data;
+using System;
 
 namespace PersonalFinances.Authentication.Api.Repositories
 {
@@ -20,20 +22,35 @@ namespace PersonalFinances.Authentication.Api.Repositories
             {
                 var query = "SELECT * FROM User WHERE UserName = @userName AND Password = @password";
 
-                var parameters = new {userName = userName, password = passwordHash};
+                var parameters = new { userName = userName, password = passwordHash };
 
                 return (await connection.QueryAsync<User>(query, parameters)).FirstOrDefault();
             }
         }
 
-        public Task InsertrAsync(User user)
+        public async Task InsertrAsync(User user)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var query = "INSERT INTO User (Id, UserName, FistName, LastName, Email, Password, Active, Role) VALUES (@Id, @UserName, @FistName, @LastName, @Email, @Password, @Active, @Role)";
+                var parameters = new { Id = user.Id, UserName = user.UserName, FistName = user.FirstName, LastName = user.LastName, Email = user.Email, Password = user.Password, Active = user.Active, Role = user.Role };
+
+                await connection.ExecuteAsync(query, parameters);
+
+                Task.CompletedTask.Wait();
+            }
         }
 
-        public Task UpdateAsync(User user)
+        public async Task UpdateAsync(User user)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var query = "INSERT INTO User (UserName, FistName, LastName, Email, Password, Active, Role) VALUES (@UserName, @FistName, @LastName, @Email, @Password, @Active, @Role)";
+                var parameters = new { UserName = user.UserName, FistName = user.FirstName, LastName = user.LastName, Email = user.Email, Password = user.Password, Active = user.Active, Role = user.Role };
+                await connection.ExecuteAsync(query, parameters);
+
+                Task.CompletedTask.Wait();
+            }
         }
     }
 }
