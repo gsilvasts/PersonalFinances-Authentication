@@ -16,24 +16,34 @@ namespace PersonalFinances.Authentication.Api.Repositories
             _connectionString = configuration.GetConnectionString("CONNECTIONSTRING");
         }
 
-        public async Task<User?> GetAsync(string userName, string passwordHash)
+        public async Task<User?> GetByIdAsync(Guid id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                var query = "SELECT * FROM User WHERE UserName = @userName AND Password = @password";
+                var query = $"SELECT * FROM [User] WHERE Id = '{id}'";
 
-                var parameters = new { UserName = userName, Password = passwordHash };
+                return (await connection.QueryAsync<User>(query)).FirstOrDefault();
+            }
+        }
+
+        public async Task<User?> SignInAsync(string email, string passwordHash)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var query = "SELECT * FROM [User] WHERE Email = @email AND Password = @password";
+
+                var parameters = new { email = email, password = passwordHash };
 
                 return (await connection.QueryAsync<User>(query, parameters)).FirstOrDefault();
             }
         }
 
-        public async Task InsertrAsync(User user)
+        public async Task InsertAsync(User user)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                var query = "INSERT INTO User (Id, UserName, FistName, LastName, Email, Password, Active, Role) VALUES (@Id, @UserName, @FistName, @LastName, @Email, @Password, @Active, @Role)";
-                var parameters = new { Id = user.Id, UserName = user.UserName, FistName = user.FirstName, LastName = user.LastName, Email = user.Email, Password = user.Password, Active = user.Active, Role = user.Role };
+                var query = "INSERT INTO [User] (Id, FirstName, LastName, Email, Password, Active, Role) VALUES (@Id, @FistName, @LastName, @Email, @Password, @Active, @Role)";
+                var parameters = new { Id = user.Id, FistName = user.FirstName, LastName = user.LastName, Email = user.Email, Password = user.Password, Active = user.Active, Role = user.Role };
 
                 await connection.ExecuteAsync(query, parameters);
 
@@ -45,11 +55,49 @@ namespace PersonalFinances.Authentication.Api.Repositories
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                var query = "INSERT INTO User (UserName, FistName, LastName, Email, Password, Active, Role) VALUES (@UserName, @FistName, @LastName, @Email, @Password, @Active, @Role)";
-                var parameters = new { UserName = user.UserName, FistName = user.FirstName, LastName = user.LastName, Email = user.Email, Password = user.Password, Active = user.Active, Role = user.Role };
-                await connection.ExecuteAsync(query, parameters);
+                var query = $"UPDATE [User] " +
+                    $"SET FirstName = {user.FirstName}, LastName = {user.LastName}, Email = {user.Email}, Password = {user.Password}, Active = {user.Active}, Role = {user.Role}" +
+                    $"WHERE Id = {user.Id}";
+
+                await connection.ExecuteAsync(query);
 
                 Task.CompletedTask.Wait();
+            }
+        }
+
+        public async Task ChangePasswordAsync(Guid id, string newPassword)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var query = $"UPDATE [User] SET Password = {newPassword} WHERE Id = {id}";
+
+                await connection.ExecuteAsync(query);
+
+                Task.CompletedTask.Wait();
+            }
+        }
+
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    var query = $"SELECT * FROM [User] WHERE Email = @email";
+
+                    var parameters = new { email = email };
+
+                    var user = (await connection.QueryAsync<User>(query, parameters)).FirstOrDefault();
+
+                    return user;
+
+                }
+                catch (Exception e)
+                {
+
+                    throw;
+                }
+
             }
         }
     }
