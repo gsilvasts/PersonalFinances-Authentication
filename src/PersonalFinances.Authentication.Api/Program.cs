@@ -44,7 +44,7 @@ builder.Services.AddAuthentication(x =>
 #region Authz   
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Admin", policy => policy.RequireRole("manager"));    
+    options.AddPolicy("Admin", policy => policy.RequireRole("manager"));
 });
 #endregion
 
@@ -62,46 +62,73 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapPost("/login", async (IUserRepository repository, ITokenService service, string email, string password) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapPost("/login", async (IUserRepository repository, ITokenService service, string userName, string password) =>
-{    
     var passwordhash = service.ComputerSha256Hash(password);
-    var user = await repository.GetAsync(userName, passwordhash);
-    
-    if (user is null) 
-        return Results.NotFound(new {message="Invalid username or password"});
+    var user = await repository.SignInAsync(email, passwordhash);
+
+    if (user is null)
+        return Results.NotFound(new { message = "Invalid email or password" });
 
     var token = service.GenerateJWtToken(user);
 
     return Results.Ok(new
     {
-        user = userName,
+        user = user,
         token = token,
     });
 });
 
-app.MapGet("/weatherforecast", () =>
+app.MapPost("/signup", async (IUserRepository repository, ITokenService service, UserDto userDto) =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+    var user = await repository.GetByEmailAsync(userDto.Email);
+
+    if (user is not null)
+        return Results.BadRequest(new { message = "User is exist" });
+
+    var password = service.ComputerSha256Hash(userDto.Password);
+
+    user = new User(userDto.FirstName, userDto.LastName, userDto.Email, password, userDto.Role);
+
+    await repository.InsertAsync(user);
+
+    return Results.Ok(new { user = user });
+});
+
+app.MapPost("/update", async (IUserRepository repository, ITokenService service, UpdateUserDto userDto) =>
+{
+    var user = await repository.GetByIdAsync(userDto.Id);
+
+    if (user is null)
+        return Results.BadRequest(new { message = "User is not exist" });
+
+    user.Update(userDto.FirstName, userDto.LastName, userDto.Email, userDto.Role);
+
+    await repository.UpdateAsync(user);
+
+    return Results.Ok(new { user = user });
+}).RequireAuthorization();
+
+app.MapPost("/change-password", async (IUserRepository repository, ITokenService service, string email, string oldPassword, string newPassword) =>
+{
+    var oldPasswordHash = service.ComputerSha256Hash(oldPassword);
+    var user = await repository.SignInAsync(email, oldPasswordHash);
+
+    if (user is null)
+        return Results.NotFound(new { message = "Invalid email or password" });
+
+    var newPasswordHash = service.ComputerSha256Hash(newPassword);
+
+    await repository.ChangePasswordAsync(user.Id, newPasswordHash);
+
+    return Results.Ok(new { user = user });
+}).RequireAuthorization();
+
 
 app.Run();
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+
+internal record UserDto(string FirstName, string LastName, string Email, string Password, string Role);
+
+internal record UpdateUserDto(Guid Id, string FirstName, string LastName, string Email, string Role);
+
