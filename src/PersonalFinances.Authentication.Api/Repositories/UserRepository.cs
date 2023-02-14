@@ -42,8 +42,8 @@ namespace PersonalFinances.Authentication.Api.Repositories
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                var query = "INSERT INTO [User] (Id, FirstName, LastName, Email, Password, Active, Role) VALUES (@Id, @FistName, @LastName, @Email, @Password, @Active, @Role)";
-                var parameters = new { Id = user.Id, FistName = user.FirstName, LastName = user.LastName, Email = user.Email, Password = user.Password, Active = user.Active, Role = user.Role };
+                var query = "INSERT INTO [User] (Id, FirstName, LastName, Email, Password, Active, Role) VALUES (@Id, @FirstName, @LastName, @Email, @Password, @Active, @Role)";
+                var parameters = new { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, Email = user.Email, Password = user.Password, Active = user.Active, Role = user.Role };
 
                 await connection.ExecuteAsync(query, parameters);
 
@@ -56,10 +56,10 @@ namespace PersonalFinances.Authentication.Api.Repositories
             using (var connection = new SqlConnection(_connectionString))
             {
                 var query = $"UPDATE [User] " +
-                    $"SET FirstName = {user.FirstName}, LastName = {user.LastName}, Email = {user.Email}, Password = {user.Password}, Active = {user.Active}, Role = {user.Role}" +
-                    $"WHERE Id = {user.Id}";
+                    $"SET FirstName = @FirstName, LastName = @LastName, Email = @Email, Password = @Password, Active = @Active, Role = @Role WHERE Id = @Id";
+                var parameters = new { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, Email = user.Email, Password = user.Password, Active = user.Active, Role = user.Role };
 
-                await connection.ExecuteAsync(query);
+                await connection.ExecuteAsync(query, parameters);
 
                 Task.CompletedTask.Wait();
             }
@@ -69,7 +69,7 @@ namespace PersonalFinances.Authentication.Api.Repositories
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                var query = $"UPDATE [User] SET Password = {newPassword} WHERE Id = {id}";
+                var query = $"UPDATE [User] SET Password = '{newPassword}' WHERE Id = '{id}'";
 
                 await connection.ExecuteAsync(query);
 
