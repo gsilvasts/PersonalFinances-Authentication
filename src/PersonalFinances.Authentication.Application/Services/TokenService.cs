@@ -1,25 +1,17 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using PersonalFinances.Authentication.Api.Interfaces.Repository;
 using PersonalFinances.Authentication.Api.Interfaces.Services;
-using PersonalFinances.Authentication.Api.Models;
+using PersonalFinances.Authentication.Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace PersonalFinances.Authentication.Api.Services
+namespace PersonalFinances.Authentication.Application.Services
 {
+    [ExcludeFromCodeCoverage]
     public class TokenService : ITokenService
-    {
-        private readonly IConfiguration _configuration;
-        private readonly IUserRepository _repository;
-
-        public TokenService(IConfiguration configuration, IUserRepository repository)
-        {
-            _configuration = configuration;
-            _repository = repository;
-        }
-
+    {               
         public string ComputerSha256Hash(string password)
         {
 
@@ -39,16 +31,19 @@ namespace PersonalFinances.Authentication.Api.Services
 
         public string GenerateJWtToken(User user)
         {
-            var issuer = _configuration["AuthenticationSettings:Issuer"];
-            var audience = _configuration["AuthenticationSettings:Audience"];
-            var key = _configuration["AuthenticationSettings:SecretKey"];
+            var issuer = Environment.GetEnvironmentVariable("AuthenticationSettingsIssuer");
+            var audience = Environment.GetEnvironmentVariable("AuthenticationSettingsAudience");
+            var key = Environment.GetEnvironmentVariable("AuthenticationSettingsSecretKey");
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>();
 
-            claims.Add(new Claim(ClaimTypes.Role, user.Role.Trim()));
+            if(user.Role != null)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, user.Role.Trim()));
+            }
 
             var token = new JwtSecurityToken(
                 issuer: issuer,

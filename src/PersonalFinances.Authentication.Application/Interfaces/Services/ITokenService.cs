@@ -1,4 +1,4 @@
-﻿using PersonalFinances.Authentication.Api.Models;
+﻿using PersonalFinances.Authentication.Domain.Entities;
 
 namespace PersonalFinances.Authentication.Api.Interfaces.Services
 {

@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalFinances.Authentication.Api", "PersonalFinances.Authentication.Api\PersonalFinances.Authentication.Api.csproj", "{22323D20-1CB2-4BCD-A7DC-1C7FA73BA75E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalFinances.Authentication.Api", "PersonalFinances.Authentication.Api\PersonalFinances.Authentication.Api.csproj", "{22323D20-1CB2-4BCD-A7DC-1C7FA73BA75E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalFinances.Authentication.Application", "PersonalFinances.Authentication.Application\PersonalFinances.Authentication.Application.csproj", "{FCF936C7-F0FD-4328-9DC6-F41429A7834A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalFinances.Authentication.Infrastructure", "PersonalFinances.Authentication.Infrastructure\PersonalFinances.Authentication.Infrastructure.csproj", "{9871466A-E242-4783-A244-BF20678846BE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalFinances.Authentication.Domain", "PersonalFinances.Authentication.Domain\PersonalFinances.Authentication.Domain.csproj", "{AFE2ED00-FA42-457D-B637-1D77ADCA44A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalFinances.Authentication.CrossCultting", "PersonalFinances.Authentication.CrossCultting\PersonalFinances.Authentication.CrossCultting.csproj", "{D8527EF0-C84B-426B-B03A-313B3501C9F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +23,22 @@ Global
 		{22323D20-1CB2-4BCD-A7DC-1C7FA73BA75E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22323D20-1CB2-4BCD-A7DC-1C7FA73BA75E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22323D20-1CB2-4BCD-A7DC-1C7FA73BA75E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCF936C7-F0FD-4328-9DC6-F41429A7834A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCF936C7-F0FD-4328-9DC6-F41429A7834A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCF936C7-F0FD-4328-9DC6-F41429A7834A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCF936C7-F0FD-4328-9DC6-F41429A7834A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9871466A-E242-4783-A244-BF20678846BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9871466A-E242-4783-A244-BF20678846BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9871466A-E242-4783-A244-BF20678846BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9871466A-E242-4783-A244-BF20678846BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFE2ED00-FA42-457D-B637-1D77ADCA44A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFE2ED00-FA42-457D-B637-1D77ADCA44A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFE2ED00-FA42-457D-B637-1D77ADCA44A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFE2ED00-FA42-457D-B637-1D77ADCA44A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8527EF0-C84B-426B-B03A-313B3501C9F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8527EF0-C84B-426B-B03A-313B3501C9F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8527EF0-C84B-426B-B03A-313B3501C9F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8527EF0-C84B-426B-B03A-313B3501C9F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,17 +5,29 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AuthenticationSettingsIssuer": "Finance",
+        "AuthenticationSettingsAudience": "AuthenticationAPI",
+        "AuthenticationSettingsSecretKey": "UqaW8ySDDrHafsVowUxz7ETaC1aMN4eB",
+        "MONGO_DATABASE": "FinanceAuthentication",
+        "MONGO_CONNECTION_STRING": "mongodb://localhost:27017",
+        "MONGO_ISSSL": "true"
       },
-      "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5187"
-    },
+        "dotnetRunMessages": true,
+        "applicationUrl": "http://localhost:5187"
+      },
     "https": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AuthenticationSettingsIssuer": "Finance",
+        "AuthenticationSettingsAudience": "AuthenticationAPI",
+        "AuthenticationSettingsSecretKey": "UqaW8ySDDrHafsVowUxz7ETaC1aMN4eB",
+        "MONGO_DATABASE": "FinanceAuthentication",
+        "MONGO_CONNECTION_STRING": "mongodb://localhost:27017",
+        "MONGO_ISSSL": "true"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7022;http://localhost:5187"
