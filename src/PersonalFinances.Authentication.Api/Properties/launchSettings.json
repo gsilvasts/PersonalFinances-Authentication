@@ -22,8 +22,8 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "AuthenticationSettingsIssuer": "Finance",
-        "AuthenticationSettingsAudience": "AuthenticationAPI",
+        "AuthenticationSettingsIssuer": "AuthenticationAPI",
+        "AuthenticationSettingsAudience": "FinanceAPI",
         "AuthenticationSettingsSecretKey": "UqaW8ySDDrHafsVowUxz7ETaC1aMN4eB",
         "MONGO_DATABASE": "FinanceAuthentication",
         "MONGO_CONNECTION_STRING": "mongodb://localhost:27017",

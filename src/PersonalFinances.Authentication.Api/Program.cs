@@ -52,6 +52,8 @@ builder.Services
     .AddValidatorsFromAssemblyContaining<SignUpValidator>()
     .AddFluentValidationAutoValidation();
 
+builder.Services.AddCors();
+
 var app = builder.Build();
 
 app.UseAuthentication();
@@ -63,6 +65,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(options => options.AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader());
 
 app.UseHttpsRedirection();
 
@@ -84,7 +88,7 @@ app.MapPost("/signup", async (IUserService service, SignUpInputModel inputModel,
     }
 }).AddEndpointFilter<ValidationFilter<SignUpInputModel>>();
 
-app.MapPost("/login", async (IUserService service, string email, string password, CancellationToken cancellationToken) =>
+app.MapGet("/login", async (IUserService service, string email, string password, CancellationToken cancellationToken) =>
 {
     try
     {

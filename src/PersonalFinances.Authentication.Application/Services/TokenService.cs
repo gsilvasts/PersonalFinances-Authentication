@@ -31,18 +31,23 @@ namespace PersonalFinances.Authentication.Application.Services
 
         public string GenerateJWtToken(User user)
         {
-            var issuer = Environment.GetEnvironmentVariable("AuthenticationSettingsIssuer");
-            var audience = Environment.GetEnvironmentVariable("AuthenticationSettingsAudience");
-            var key = Environment.GetEnvironmentVariable("AuthenticationSettingsSecretKey");
+            var issuer = Environment.GetEnvironmentVariable("AuthenticationSettingsIssuer") ?? string.Empty;
+            var audience = Environment.GetEnvironmentVariable("AuthenticationSettingsAudience") ?? string.Empty;
+            var key = Environment.GetEnvironmentVariable("AuthenticationSettingsSecretKey") ?? string.Empty;
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claims = new List<Claim>();
-
-            if(user.Role != null)
+            var claims = new List<Claim>()
             {
-                claims.Add(new Claim(ClaimTypes.Role, user.Role.Trim()));
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
+            };
+
+
+            if(user.Role != null && user.Role.Any())
+            {
+                claims.AddRange(user.Role.Select(x=> new Claim(ClaimTypes.Role, x.Trim())));
             }
 
             var token = new JwtSecurityToken(

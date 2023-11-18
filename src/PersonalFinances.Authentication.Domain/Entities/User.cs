@@ -15,10 +15,10 @@
         public string LastName { get; private set; }
         public string Email { get; private set; }
         public string Password { get; private set; }
-        public string? Role { get; private set; }
+        public string[] Role { get; private set; }
         public bool Active { get; private set; }
 
-        public void Update(string firstName, string lastName, string email, string role)
+        public void Update(string firstName, string lastName, string email, string[] role)
         {            
             FirstName = firstName;
             LastName = lastName;
